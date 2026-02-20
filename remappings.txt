@@ -1,0 +1,4 @@
+@layerzerolabs/oapp-evm/=node_modules/@layerzerolabs/lz-evm-oapp-v2/
+@layerzerolabs/onft-evm/=node_modules/@layerzerolabs/onft-evm/
+@openzeppelin/=node_modules/@openzeppelin/
+

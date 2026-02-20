@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manual Verification Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: #fff; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .field { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; background: #333; color: #fff; border: 1px solid #555; }
+        button { padding: 10px 20px; background: #007cba; color: white; border: none; cursor: pointer; margin: 5px; }
+        button:hover { background: #005a87; }
+        .code { background: #222; padding: 10px; border-radius: 5px; font-family: monospace; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Manual Contract Verification Helper</h1>
+        
+        <div class="field">
+            <label>Contract Address:</label>
+            <input type="text" id="contractAddress" value="0x810b68b2b502366f95e09cF10afd294c5A0b3426" readonly>
+        </div>
+        
+        <div class="field">
+            <label>Compiler Version:</label>
+            <input type="text" id="compilerVersion" value="v0.8.22+commit.4fc1097e" readonly>
+        </div>
+        
+        <div class="field">
+            <label>Optimization:</label>
+            <input type="text" id="optimization" value="Yes, 200 runs" readonly>
+        </div>
+        
+        <div class="field">
+            <label>Constructor Arguments (Copy this to Etherscan):</label>
+            <textarea id="constructorArgs" rows="3" readonly>0000000000000000000000006559807ffd23965d3af54ee454bc69f113ed06ef0000000000000000000000001a44076050125825900e736c501f58089c167c000000000000000000000000ab705b9734cb776a8f5b18c9036c14c6828933f</textarea>
+        </div>
+        
+        <div class="field">
+            <label>Source Code:</label>
+            <textarea id="sourceCode" rows="20" readonly>// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.22;
+
+contract PixelGoblinONFTAdapter {
+    address private immutable _token;
+    address private immutable _endpoint;
+    address public owner;
+    mapping(uint32 => uint256) public peers;
+    
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    
+    constructor(address token_, address endpoint_, address delegate_) {
+        _token = token_;
+        _endpoint = endpoint_;
+        owner = delegate_;
+        emit OwnershipTransferred(address(0), delegate_);
+    }
+    
+    function token() external view returns (address) {
+        return _token;
+    }
+    
+    function endpoint() external view returns (address) {
+        return _endpoint;
+    }
+    
+    function name() external pure returns (string memory) {
+        return "Pixel Goblins";
+    }
+    
+    function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
+        return interfaceId == 0x01ffc9a7 || interfaceId == 0x80ac58cd;
+    }
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Ownable: caller is not the owner");
+        _;
+    }
+    
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+    }
+    
+    function setPeer(uint32 eid, uint256 peer) external onlyOwner {
+        peers[eid] = peer;
+    }
+}</textarea>
+        </div>
+        
+        <button onclick="copyConstructorArgs()">📋 Copy Constructor Args</button>
+        <button onclick="copySourceCode()">📋 Copy Source Code</button>
+        <button onclick="openEtherscan()">🔗 Open Etherscan Verification</button>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 5px;">
+            <h3>📝 Manual Verification Steps:</h3>
+            <ol>
+                <li>Click "Open Etherscan Verification" button above</li>
+                <li>Select "Solidity (Single file)" as compiler type</li>
+                <li>Select "v0.8.22+commit.4fc1097e" as compiler version</li>
+                <li>Select "MIT License (MIT)" as license type</li>
+                <li>Copy and paste the source code from above</li>
+                <li>Set Optimization to "Yes" with 200 runs</li>
+                <li>Copy and paste the constructor arguments from above</li>
+                <li>Click "Verify and Publish"</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        function copyConstructorArgs() {
+            const textarea = document.getElementById('constructorArgs');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Constructor arguments copied to clipboard!');
+        }
+        
+        function copySourceCode() {
+            const textarea = document.getElementById('sourceCode');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Source code copied to clipboard!');
+        }
+        
+        function openEtherscan() {
+            window.open('https://etherscan.io/verifyContract', '_blank');
+        }
+    </script>
+</body>
+</html>
