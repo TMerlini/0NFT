@@ -1,0 +1,3 @@
+# Use only Next.js API routes (pages/api), not root api/ serverless functions
+# Avoids EEXIST symlink conflict during build
+api
