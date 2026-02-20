@@ -140,9 +140,13 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Don't render Web3 providers during SSR
+  // Don't render app children until providers are mounted (avoids wagmi hooks crashing on /query etc.)
   if (!mounted) {
-    return <div className="min-h-screen bg-black text-white">{children}</div>
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="animate-pulse text-white/70">Loading...</div>
+      </div>
+    )
   }
 
   // Error boundary for Web3 provider initialization
